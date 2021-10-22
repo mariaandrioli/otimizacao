@@ -1,4 +1,4 @@
-## Table of contents
+## Índice
 * [Descrição](#descricao)
 * [Instalação](#instalacao)
 * [Execução](#execucao)
@@ -6,7 +6,7 @@
 
 
 ## Descrição
-Trabalho 1 da disciplina CI1238 - Otimização, no semestre 2021/1.
+Trabalho 1 da disciplina CI1238 - Otimização, no semestre 2021/1.  
 [Especificação do projeto](trabalho1.pdf).
 	
 ## Instalação
