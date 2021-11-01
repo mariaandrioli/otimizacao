@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+FILENAME = "output.lp"
+
 class graph:
 	def __init__(self,gdict=None):
 		if gdict is None:
@@ -69,25 +71,65 @@ def criaGrafo(num_sedes, custos):
 
 	return g
 
-def criaDictCustos(conexoes,custos):
+def criaDictCustos(conexoes,custos, demanda):
 	custos_conexoes = {}
 
 	j = 0
 	for i in range(0,len(custos),3):
-		custos_conexoes[tuple(conexoes[j])] = custos[i+2]
+		custos_conexoes[tuple(conexoes[j])] = custos[i+2]*demanda
 		j = j + 1
 		
-	print(custos_conexoes)
 	return custos_conexoes
+
+def primeiraUltima(sede, custos_conexoes, position):
+	f = open(FILENAME, "a")
+
+	aux = []
+	for i in custos_conexoes:
+		if i[position] == sede:
+			aux.append(str(i[0]) + str(i[1]))
+	for i in range(len(aux)-1):
+			f.write('x' + str(aux[i]) + " + ")
+	f.write('x' + str(aux[len(aux)-1]) + " = 1;\n")
+
+	f.close()
+
+def criaSaida(conexoes, custos_conexoes, num_conexoes, sede_origem, sede_destino):
+	f = open(FILENAME, "w")
+	print("custos entre vertices: ", custos_conexoes)
+
+	vars = []
+	for i in custos_conexoes:
+		vars.append(str(custos_conexoes[i]) + ' x' + str(i[0]) + str(i[1]))
+
+	# print(vars)
+	# f.write("max: +143 x +60 y;\n+120 x +210 y <= 15000;\n+110 x +30 y <= 4000;\n+x +y <= 75;")
+	f.write("min: ")
+	for i in range(num_conexoes-1):
+			f.write(str(vars[i]) + " + ")
+	f.write(str(vars[num_conexoes-1]) + ";\n")
+	f.close()
+
+	primeiraUltima(sede_origem, custos_conexoes, 0)
+	primeiraUltima(sede_destino, custos_conexoes, 1)
+	# f.write('x' + str(i[0]) + str(i[1]) + " + ")
+
+	#open and read the file after the appending:
+	f = open(FILENAME, "r")
+	print(f.read())
+
+	return 0
 
 def main():
 	num_sedes, num_conexoes, sede_origem, sede_destino, demanda, custos = read_input()
-	# print(num_sedes, num_conexoes, sede_origem, sede_destino, demanda)
-	print(custos)
+	print("origem: ", sede_origem,"\ndestino: ", sede_destino, "\ndemanda: ", demanda)
+	# print(custos)
 
 	conexoes = criaGrafo(num_sedes, custos)
 	
-	custos_conexoes = criaDictCustos(conexoes.edges(), custos)
+	custos_conexoes = criaDictCustos(conexoes.edges(), custos, demanda)
+
+	criaSaida(conexoes, custos_conexoes, num_conexoes, sede_origem, sede_destino)
 
 	return 0
 
