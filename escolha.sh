@@ -1,7 +1,14 @@
 #!/bin/sh
 make
+FILES="testes/*"
 if [ $? -eq 0 ] ; then
-  ./escolha < testes/teste.in
+  for f in $FILES
+  do
+    echo "Processing $f file..."
+    ./escolha < $f
+    echo "\n"
+  done
+  # ./escolha < testes/teste.in
   # ./escolha < testes/teste1.in
   # ./escolha < testes/teste2.in
 else 
