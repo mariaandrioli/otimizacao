@@ -4,12 +4,13 @@
 
 # Defines the default target that `make` will to try to make, or in the case of a phony target, execute the specified commands
 # This target is executed whenever we just type `make`
-.DEFAULT_GOAL = escolha
+all: escolha
 	
-escolha:
-	chmod +x escolha
+escolha: main.py
+	cp main.py escolha && chmod +x escolha
 
 # In this context, the *.project pattern means "anything that has the .project extension"
 clean:
 	rm *.lp
+	rm escolha
 	rm -rf __pycache__
