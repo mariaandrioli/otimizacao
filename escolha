@@ -71,64 +71,108 @@ def criaGrafo(num_sedes, custos):
 
 	return g
 
-def criaDictCustos(conexoes,custos, demanda):
+def reverse(tuples):
+    new_tup = tuples[::-1]
+    return new_tup
+
+def criaDictCustos(custos, demanda):
 	custos_conexoes = {}
 
 	j = 0
 	for i in range(0,len(custos),3):
-		custos_conexoes[tuple(conexoes[j])] = custos[i+2]*demanda
+		custos_conexoes[(custos[i], custos[i+1])] = custos[i+2]*demanda
+		custos_conexoes[(custos[i+1], custos[i])] = custos[i+2]*demanda
 		j = j + 1
 		
 	return custos_conexoes
 
-def primeiraUltima(sede, custos_conexoes, position):
-	f = open(FILENAME, "a")
-
-	aux = []
+def origemDestino(sede, custos_conexoes, first_position, second_position):
+	in_aux = []
+	out_aux = []
 	for i in custos_conexoes:
-		if i[position] == sede:
-			aux.append(str(i[0]) + str(i[1]))
-	for i in range(len(aux)-1):
-			f.write('x' + str(aux[i]) + " + ")
-	f.write('x' + str(aux[len(aux)-1]) + " = 1;\n")
+		if i[first_position] == sede: # incoming
+			in_aux.append(str(i[0]) + str(i[1]))
+		if i[second_position] == sede: # outgoing
+			out_aux.append(str(i[0]) + str(i[1]))
+
+	f = open(FILENAME, "a")
+	
+	if (len(in_aux) > 0):
+		for i in range(len(in_aux)-1):
+				f.write('x' + str(in_aux[i]) + " + ")
+		f.write('x' + str(in_aux[len(in_aux)-1]) + " + ")
+
+	if (len(out_aux) > 0):
+		for i in range(len(out_aux)-1):
+				f.write('-x' + str(out_aux[i]) + " + ")
+		f.write('-x' + str(out_aux[len(out_aux)-1]) + " = 1;\n")
+
+	f.close()
+
+def equacaoMeio(sede, custos_conexoes):
+	in_aux = []
+	out_aux = []
+	for i in custos_conexoes:
+		if i[0] == sede: # incoming
+			in_aux.append(str(i[0]) + str(i[1]))
+		if i[1] == sede: # outgoing
+			out_aux.append(str(i[0]) + str(i[1]))
+
+	# print(sede)
+	# print(in_aux)
+	# print(out_aux)
+
+	f = open(FILENAME, "a")
+	if (len(in_aux) > 0):
+		for i in range(len(in_aux)-1):
+				f.write('x' + str(in_aux[i]) + " + ")
+		f.write('x' + str(in_aux[len(in_aux)-1]) + " + ")
+
+	if (len(out_aux) > 0):
+		for i in range(len(out_aux)-1):
+				f.write('-x' + str(out_aux[i]) + " + ")
+		f.write('-x' + str(out_aux[len(out_aux)-1]) + " = 0;\n")
 
 	f.close()
 
 def criaSaida(conexoes, custos_conexoes, num_conexoes, sede_origem, sede_destino):
 	f = open(FILENAME, "w")
-	print("custos entre vertices: ", custos_conexoes)
+	# print("custos entre vertices: ", custos_conexoes)
 
 	vars = []
 	for i in custos_conexoes:
 		vars.append(str(custos_conexoes[i]) + ' x' + str(i[0]) + str(i[1]))
 
-	# print(vars)
-	# f.write("max: +143 x +60 y;\n+120 x +210 y <= 15000;\n+110 x +30 y <= 4000;\n+x +y <= 75;")
 	f.write("min: ")
 	for i in range(num_conexoes-1):
 			f.write(str(vars[i]) + " + ")
 	f.write(str(vars[num_conexoes-1]) + ";\n")
 	f.close()
 
-	primeiraUltima(sede_origem, custos_conexoes, 0)
-	primeiraUltima(sede_destino, custos_conexoes, 1)
-	# f.write('x' + str(i[0]) + str(i[1]) + " + ")
+	origemDestino(sede_origem, custos_conexoes, 0, 1)
+	origemDestino(sede_destino, custos_conexoes, 1, 0)
 
-	#open and read the file after the appending:
-	f = open(FILENAME, "r")
-	print(f.read())
+	sedes = conexoes.getVertices()
+
+	for i in sedes:
+		if i+1 != sede_origem and i+1 != sede_destino:
+			equacaoMeio(i+1, custos_conexoes)
+
+
+	# f = open(FILENAME, "r")
+	# print(f.read())
 
 	return 0
 
 def main():
 	num_sedes, num_conexoes, sede_origem, sede_destino, demanda, custos = read_input()
-	print("origem: ", sede_origem,"\ndestino: ", sede_destino, "\ndemanda: ", demanda)
-	# print(custos)
+	# print("origem: ", sede_origem,"\ndestino: ", sede_destino, "\ndemanda: ", demanda)
+
+	num_conexoes = num_conexoes * 2
 
 	conexoes = criaGrafo(num_sedes, custos)
 	
-	custos_conexoes = criaDictCustos(conexoes.edges(), custos, demanda)
-
+	custos_conexoes = criaDictCustos(custos, demanda)
 	criaSaida(conexoes, custos_conexoes, num_conexoes, sede_origem, sede_destino)
 
 	return 0
