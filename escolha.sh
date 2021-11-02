@@ -1,6 +1,6 @@
 #!/bin/sh
 make
-FILES="testes/*.in"
+FILES="testes/*"
 if [ $? -eq 0 ] ; then
   for f in $FILES
   do
@@ -13,4 +13,3 @@ else
   echo "failed to compile"
 fi
 make clean
-rm *.lp

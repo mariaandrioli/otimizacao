@@ -6,9 +6,10 @@
 # This target is executed whenever we just type `make`
 .DEFAULT_GOAL = escolha
 	
-escolha: 
+escolha:
 	chmod +x escolha
 
 # In this context, the *.project pattern means "anything that has the .project extension"
 clean:
+	rm *.lp
 	rm -rf __pycache__
