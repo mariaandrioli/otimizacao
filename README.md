@@ -7,7 +7,8 @@
 
 ## Descrição
 Trabalho 1 da disciplina CI1238 - Otimização, no semestre 2021/1.  
-[Especificação do projeto](trabalho1.pdf).
+[Especificação do projeto](docs/especificacao.pdf).
+[Relatório](docs/texto.pdf).
 	
 ## Instalação
 Para instalar dependências e gerar o executável `./escolha`
@@ -23,6 +24,8 @@ O programa recebe da entrada padrão o seguinte:
 ```
 ./escolha < arquivo_de_teste
 ```
+
+E gera como saída o arquivo `output.lp` que funciona como entrada para o [lp_solve](http://web.mit.edu/lpsolve/doc/)
 
 ## Testes
 O script `./escolha.sh` aplica o make depois realiza testes com os arquivos dentro da pasta [/testes](/testes)
