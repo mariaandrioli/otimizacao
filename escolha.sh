@@ -13,3 +13,4 @@ else
   echo "failed to compile"
 fi
 make clean
+rm *.lp
