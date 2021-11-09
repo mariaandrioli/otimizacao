@@ -7,7 +7,7 @@
 
 ## Descrição
 Trabalho 1 da disciplina CI1238 - Otimização, no semestre 2021/1.  
-[Especificação do projeto](docs/especificacao.pdf). 
+[Especificação do projeto](docs/especificacao.pdf).  
 [Relatório](docs/texto.pdf).
 	
 ## Instalação
